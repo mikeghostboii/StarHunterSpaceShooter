@@ -11,3 +11,4 @@ public class StarFrame extends JFrame {
 		this.add(panel);
 	}
 }
+
