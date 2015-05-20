@@ -8,11 +8,10 @@ import javax.swing.*;
 public class StarPanel extends JPanel implements Runnable {
 
 	private int score = 0;
+	@SuppressWarnings("unused")
 	private int x, y;
 	private double dx = 2, dy = 0;
 	private BattleShip ship;
-	private EnemyShip enemy, enemy1;
-	private Obstacles o;
 	private boolean isTouching = false;
 	private Image i;
 	private Graphics graphics;
@@ -26,7 +25,6 @@ public class StarPanel extends JPanel implements Runnable {
 		setBackground(new Color(165, 42, 0));
 		ship = new BattleShip(400, 400);
 		addEnemyShip();
-		o = new Obstacles(x, y);
 
 		Thread thread = new Thread(this);
 		thread.start();
