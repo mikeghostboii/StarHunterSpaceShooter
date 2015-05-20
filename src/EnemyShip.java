@@ -5,7 +5,6 @@ import java.awt.Rectangle;
 
 public class EnemyShip extends Ship{
 	
-	private int x, y;
 	private int width = 25;
 	private int height = 25;
 
@@ -16,19 +15,17 @@ public class EnemyShip extends Ship{
 	}
 
 	public EnemyShip(int x, int y) {
-		this.x = x;
-		this.y = y;
+		super(x, y);
 	}
 
 	public void draw(Graphics2D g2) {
-		int xCor = x;
-		int yCor = y;
-		box = new Rectangle(xCor, yCor, width, height);
+		
+		box = new Rectangle((int)x, (int)y, width, height);
+		g2.setColor(Color.BLACK);
 		g2.draw(box);
 		g2.fill(box);
 		g2.setColor(Color.RED);
-		body = new Rectangle(x, y, width - 15, height - 15);
+		body = new Rectangle((int)x, (int)y, width - 15, height - 15);
 		g2.fill(body);
 	}
-
 }
