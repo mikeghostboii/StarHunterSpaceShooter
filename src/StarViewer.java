@@ -13,3 +13,4 @@ public class StarViewer {
 		frame.setVisible(true);
 	}
 }
+
