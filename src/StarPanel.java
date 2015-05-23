@@ -1,7 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-
 import javax.swing.*;
 
 @SuppressWarnings("serial")
@@ -10,27 +8,39 @@ public class StarPanel extends JPanel implements Runnable {
 	private int score = 0;
 	@SuppressWarnings("unused")
 	private int x, y;
+	@SuppressWarnings("unused")
 	private double dx = 2, dy = 0;
 	private BattleShip ship;
+	private EnemyShip enemy, enemy1, enemy2, enemy3, enemy4, enemy5;
+	private Ammo bullet;
 	private boolean isTouching = false;
+	private boolean shoot = false;
 	private Image i;
 	private Graphics graphics;
-	ArrayList<EnemyShip> list = new ArrayList<EnemyShip>();
 
 	/*
 	 * Game functionality and logic
 	 */
 	public StarPanel() {
 
-		setBackground(new Color(165, 42, 0));
 		ship = new BattleShip(400, 400);
-		addEnemyShip();
+		bullet = new Ammo(411, 403);
+		enemy = new EnemyShip(50, 100);
+		enemy1 = new EnemyShip(50, 140);
+		enemy2 = new EnemyShip(50, 180);
+
+		enemy3 = new EnemyShip(100, 100);
+		enemy4 = new EnemyShip(100, 140);
+		enemy5 = new EnemyShip(100, 180);
 
 		Thread thread = new Thread(this);
 		thread.start();
 
 		controls();
 
+		if (shoot == true) {
+			System.out.println("TRUEE");
+		}
 		class MyListener extends MouseAdapter {
 			@Override
 			public void mousePressed(MouseEvent e) {
@@ -44,13 +54,21 @@ public class StarPanel extends JPanel implements Runnable {
 
 	public void run() {
 		while (true) {
-			boundaries();
 
-			list.get(0).setX(list.get(0).getX() + dx);
-			// enemy.setY(enemy.getY() + dy);
+			moveEnemy(enemy);
+			moveEnemy(enemy1);
+			moveEnemy(enemy2);
+			moveEnemy(enemy3);
+			moveEnemy(enemy4);
+			moveEnemy(enemy5);
 
-			list.get(1).setX(list.get(1).getX() - dx);
-			// enemy1.setY(enemy1.getY() - dy);
+			enemy.setX(enemy.getX() + dx);
+			enemy1.setX(enemy1.getX() + dx);
+			enemy2.setX(enemy2.getX() + dx);
+			enemy3.setX(enemy3.getX() + dx);
+			enemy4.setX(enemy4.getX() + dx);
+			enemy5.setX(enemy5.getX() + dx);
+
 			repaint();
 			try {
 				Thread.sleep(17);
@@ -70,15 +88,29 @@ public class StarPanel extends JPanel implements Runnable {
 		ship.draw(g2);
 		repaint();
 		scoreFont(g2);
-		for (EnemyShip x : list) {
-			x.draw(g2);
-		}
+		drawEnemies(g2);
+		bullet.draw(g2);
 	}
 
-	// Make it later so user can enter number of enemies
-	public void addEnemyShip() {
-		list.add(new EnemyShip(50, 50));
-		list.add(new EnemyShip(80, 80));
+	public void drawEnemies(Graphics2D g2) {
+		enemy.draw(g2);
+		enemy1.draw(g2);
+		enemy2.draw(g2);
+		enemy3.draw(g2);
+		enemy4.draw(g2);
+		enemy5.draw(g2);
+	}
+
+	public void moveEnemy(EnemyShip e) {
+		if (e.getX() + dx > 770) {
+			e.setX(770);
+			dx = -2*dx;
+		} else if (e.getX() < 1) {
+			e.setX(1);
+			dx = -dx;
+		} else {
+			x += dx;
+		}
 	}
 
 	/*
@@ -108,10 +140,6 @@ public class StarPanel extends JPanel implements Runnable {
 		g.drawString(s, getWidth() - 150, 50);
 	}
 
-	public void stop() {
-
-	}
-
 	public void update(Graphics g) {
 		if (i == null) {
 			i = createImage(this.getSize().width, this.getSize().height);
@@ -125,6 +153,7 @@ public class StarPanel extends JPanel implements Runnable {
 		paint(graphics);
 
 		g.drawImage(i, 0, 0, this);
+		controls();
 	}
 
 	/*
@@ -133,13 +162,10 @@ public class StarPanel extends JPanel implements Runnable {
 	public void controls() {
 		class KeyListenerPress extends KeyAdapter {
 			public void keyPressed(KeyEvent e) {
-				System.out.println("ship.getX() = " + ship.getX());
-				System.out.println("ship.getY() = " + ship.getY());
 
 				check();
 
 				if (isTouching == false) {
-					System.out.println("key pressed");
 					int keys = e.getKeyCode();
 
 					// Key to move object to the left (x coordinate)
@@ -186,42 +212,15 @@ public class StarPanel extends JPanel implements Runnable {
 						ship.setPosition(ship.getX() + 10, ship.getY() - 10);
 						repaint();
 						System.out.println("E is being pressed");
-					}
-					// Key to shoot bullets
-					else if (keys == KeyEvent.VK_SPACE) {
+					} else if (keys == KeyEvent.VK_SPACE) {
 						System.out.println("Shoot");
+						shoot = true;
 					}
+
 				}
 			}
 		}
 		addKeyListener(new KeyListenerPress());
 		setFocusable(true);
-	}
-
-	/*
-	 * Prevents enemy ship from passing the boundary of the frame
-	 */
-	public void boundaries() {
-		for (int i = 0; i < list.size(); i++) {
-			if (list.get(i).getX() > 770) {
-				list.get(i).setX(770);
-				dx = -dx;
-			} else if (list.get(i).getX() < 1) {
-				list.get(i).setX(1);
-				dx = -dx;
-			} else {
-				x += dx;
-			}
-
-			if (list.get(i).getY() > 600) {
-				list.get(i).setY(600);
-				dy = -dy;
-			} else if (list.get(i).getY() < 1) {
-				list.get(i).setY(1);
-				dy = -dy;
-			} else {
-				y += dy;
-			}
-		}
 	}
 }
