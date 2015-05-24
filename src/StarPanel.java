@@ -2,13 +2,10 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-@SuppressWarnings("serial")
 public class StarPanel extends JPanel implements Runnable {
 
 	private int score = 0;
-	@SuppressWarnings("unused")
 	private int x, y;
-	@SuppressWarnings("unused")
 	private double dx = 2, dy = 0;
 	private BattleShip ship;
 	private EnemyShip enemy, enemy1, enemy2, enemy3, enemy4, enemy5;
