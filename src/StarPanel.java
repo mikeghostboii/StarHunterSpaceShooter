@@ -104,7 +104,7 @@ public class StarPanel extends JPanel implements Runnable {
 	public void moveEnemy(EnemyShip e) {
 		if (e.getX() + dx > 770) {
 			e.setX(770);
-			dx = -2*dx;
+			dx = -dx;
 		} else if (e.getX() < 1) {
 			e.setX(1);
 			dx = -dx;
