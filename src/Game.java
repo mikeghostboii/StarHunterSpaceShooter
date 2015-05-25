@@ -7,6 +7,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.Random;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
@@ -16,18 +18,19 @@ import javax.swing.JFrame;
  */
 @SuppressWarnings("serial")
 public class Game extends JFrame implements Runnable {
-	// 600, 500
-	int x, xDirection, xCor, mousex, rektx, bulletx;
-	int y, yDirection, yCor, mousey, rekty, bullety;
+
+	int x, xDirection, xCor, mousex, rektx, bulletx, x1, x2, x3;
+	int y, yDirection, yCor, mousey, rekty, bullety, y1, y2, y3;
 	private Image dbImage;
 	private Graphics dbg;
-	Image ship;
+	Image ship, enemy, obstacle, enemy1;
 	boolean mouseOnScreen = false;
 	boolean mouseDragged = false;
 	boolean collision = false;
 	boolean readyToFire, shot = false;
-
-	Rectangle bullet, bullet1;
+	Random random = new Random();
+	
+	Rectangle bullet, bullet1, portal;
 
 	@Override
 	public void run() {
@@ -176,8 +179,22 @@ public class Game extends JFrame implements Runnable {
 	}
 
 	public void paintComponent(Graphics g) {
+		// draw ship
+		x1 = 524;
+		y1 = 74;
+		x2 = 994;
+		y2 = 291;
+		x3 = 450;
+		y3 = 74;
 		g.drawImage(ship, x, y, this);
+		g.drawImage(enemy, x1, y1, this);
+		g.drawImage(obstacle, x2, y2, this);
+		g.drawImage(enemy1, x3, y3, this);
+		
 		g.setColor(Color.BLACK);
+
+		portal = new Rectangle(993, 459, 15, 15);
+		g.fillRect(portal.x, portal.y, portal.width, portal.height);
 
 		Rectangle r1 = new Rectangle(175, 175, 10, 10);
 		g.setColor(Color.BLUE);
@@ -185,17 +202,31 @@ public class Game extends JFrame implements Runnable {
 		Rectangle r2 = new Rectangle(x, y, ship.getWidth(this),
 				ship.getHeight(this));
 		g.setColor(Color.GREEN);
-		g.drawRect(r2.x, r2.y, r2.width, r2.height);
+		g.drawRect(r2.x, r2.y, r2.width, r2.height-10);
+		g.setColor(Color.BLUE);
+		g.drawRect(x2+2, y2+4, obstacle.getWidth(this)-4,  obstacle.getHeight(this)-14);
+		g.setColor(Color.RED);
+		g.drawRect(x1+5, y1, enemy.getWidth(this)-13,  enemy.getHeight(this)-2);
+		g.drawRect(x3, y3+2, enemy.getWidth(this)-8,  enemy.getHeight(this)-1);
 
 		// Collision
 		if (r1.intersects(r2)) {
-			g.drawString("Collision", 984, 200);
+			g.drawString("Magic Portal", 984, 200);
 			collision = true;
+			x = random.nextInt(800);
+			y = random.nextInt(250);
+		}
+		
+		if (r2.intersects(portal)) {
+			g.drawString("Magic Portal", 984, 200);
+			x = random.nextInt(800);
+			y = random.nextInt(250);
 		}
 
 		// mouse position
 		g.setColor(Color.BLUE.darker());
 		g.drawString("ShipPosition@[" + x + ", " + y + "]", 984, 170);
+	
 
 		if (mouseOnScreen == true) {
 			g.setColor(Color.black);
@@ -228,7 +259,21 @@ public class Game extends JFrame implements Runnable {
 		// Load images
 		ImageIcon i = new ImageIcon(
 				"/Users/michaelwasihun/Documents/Eclipse/projects/Game/src/ship.png");
+		ImageIcon i1 = new ImageIcon(
+				"/Users/michaelwasihun/Documents/Eclipse/projects/Game/src/a2.png");
+		ImageIcon i2 = new ImageIcon(
+				"/Users/michaelwasihun/Documents/Eclipse/projects/Game/src/a1.png");
+		ImageIcon i3 = new ImageIcon(
+				"/Users/michaelwasihun/Documents/Eclipse/projects/Game/src/enemy1.png");
+
+		
 		ship = i.getImage();
+		enemy = i1.getImage();
+		obstacle = i2.getImage();
+		enemy1 = i3.getImage();
+		
+		x = 220;
+		y = 300;
 
 		addKeyListener(new KeyBoard());
 		addMouseListener(new Mouse());
@@ -238,9 +283,5 @@ public class Game extends JFrame implements Runnable {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
-
-		x = 220;
-		y = 300;
 	}
-
 }
