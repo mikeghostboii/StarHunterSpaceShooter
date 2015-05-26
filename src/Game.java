@@ -18,9 +18,10 @@ import javax.swing.JFrame;
  */
 @SuppressWarnings("serial")
 public class Game extends JFrame implements Runnable {
-
-	int x, xDirection, xCor, mousex, rektx, bulletx, x1, x2, x3;
+ 
+	int x, xDirection, xCor, mousex, rektx, bulletx, x1, x1Direction, x2, x3;
 	int y, yDirection, yCor, mousey, rekty, bullety, y1, y2, y3;
+	int score;
 	private Image dbImage;
 	private Graphics dbg;
 	Image ship, enemy, obstacle, enemy1;
@@ -40,6 +41,7 @@ public class Game extends JFrame implements Runnable {
 				move();
 				shoot();
 				Thread.sleep(7);
+				
 			}
 		} catch (Exception e) {
 			System.out.println("Error");
@@ -125,6 +127,7 @@ public class Game extends JFrame implements Runnable {
 			}
 			if (keyCode == KeyEvent.VK_RIGHT) {
 				setXDir(1);
+
 			}
 			if (keyCode == KeyEvent.VK_UP) {
 				setYDir(-1);
